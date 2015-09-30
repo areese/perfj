@@ -21,7 +21,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#ifndef __APPLE__
 #include <error.h>
+#endif
+
 #include <errno.h>
 
 #include "perf-map-file.h"
@@ -30,7 +33,13 @@ FILE *perf_map_open(pid_t pid) {
     char filename[500];
     snprintf(filename, sizeof(filename), "/tmp/perf-%d.map", pid);
     FILE * res = fopen(filename, "w");
-    if (!res) error(0, errno, "Couldn't open %s.", filename);
+    if (!res) {
+#ifdef __APPLE__
+        fprintf(stderr,"Couldn't open %s.", filename);
+#else
+        error(0, errno, "Couldn't open %s.", filename);
+#endif
+    }
     return res;
 }
 

@@ -50,6 +50,12 @@ model {
 
           sharedLibraryFile file("${buildDir}/classes/main/info/minzhou/perfj/native/libperfj.so")
         }
+        if (targetPlatform.operatingSystem.macOsX) {
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include"
+          cCompiler.args '-I', "${org.gradle.internal.jvm.Jvm.current().javaHome}/include/darwin"
+
+          sharedLibraryFile file("${buildDir}/classes/main/info/minzhou/perfj/native/libperfj.dylib")
+        }
       }
 
       binaries.withType(StaticLibraryBinarySpec) {
